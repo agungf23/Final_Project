@@ -482,7 +482,7 @@
                                     <label for="checkbox${device.id}"></label>
                                 </span>
                             </td>
-                            <td>${device.id}</td>
+                            <td><a href="/api/device/${device.id}" class="device-detail">${device.id}</a></td>
                             <td>${device.device_name}</td>
                             <td>${device.device_type}</td>
                             <td>
@@ -587,18 +587,6 @@
                 });
             }
         </script>
-        <footer class="breadcrumb mb-4">
-            <div class="container-fluid px-4">
-                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                    <div class="text-center text-md-start">
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>

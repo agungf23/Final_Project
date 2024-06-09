@@ -9,10 +9,24 @@ use Illuminate\Support\Facades\Log;
 
 class DataController extends Controller
 {
+
+    // public function __construct()
+    // {
+    //     // Subscribe to the MQTT topic when the controller is instantiated
+    //     $this->subscribeToMqtt();
+    // }
+
     // INDEX
-    public function index()
+    public function index(Request $request)
     {
-        return Data::all();
+        $device_id = $request->device_id;
+        $data = Data::orderBy("id", "asc");
+        if($device_id){
+            $data = $data->where("device_id", $device_id);
+        }
+        $datas = $data->get();
+        return response() -> json($datas);
+        // return Data::all();
     }
 
     // POST
@@ -93,4 +107,39 @@ class DataController extends Controller
             return response()->json(["message" => "Data not found."], 404);
         }
     }
+
+    // // MQTT Subscription
+    // protected function subscribeToMqtt()
+    // {
+    //     try {
+    //         $mqtt = MQTT::connection();
+    //         $mqtt->subscribe('data/datas', function (string $topic, string $message) {
+    //             $this->handleMqttMessage($topic, $message);
+    //         }, 0);
+    //         $mqtt->loop(true); // This should be run to keep the connection alive
+    //         Log::info('Subscribed to MQTT topic: data/datas');
+    //     } catch (\Exception $e) {
+    //         Log::error('Error subscribing to MQTT: ' . $e->getMessage()); // Log any errors
+    //     }
+    // }
+
+    // // Handle incoming MQTT messages
+    // protected function handleMqttMessage(string $topic, string $message)
+    // {
+    //     $data = json_decode($message, true);
+    //     if (json_last_error() === JSON_ERROR_NONE) {
+    //         $datalog = new Data();
+    //         $datalog->device_id = $data['device_id'];
+    //         $datalog->value     = $data['value'];
+    //         $datalog->max_value = $data['max_value'];
+    //         $datalog->min_value = $data['min_value'];
+    //         if ($datalog->save()) {
+    //             Log::info('Data saved from MQTT message.');
+    //         } else {
+    //             Log::error('Failed to save data from MQTT message.');
+    //         }
+    //     } else {
+    //         Log::error('Invalid JSON received from MQTT: ' . $message);
+    //     }
+    // }
 }

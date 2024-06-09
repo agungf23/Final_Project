@@ -517,7 +517,7 @@
                                     <label for="checkbox${rule.id}"></label>
                                 </span>
                             </td>
-                            <td>${rule.id}</td>
+                            <td><a href="/api/rule/${rule.id}" class="rule-detail">${rule.id}</a></td>
                             <td>${rule.rule_cluster_id}</td>
                             <td>${rule.sensor_id}</td>
                             <td>${rule.sensor_operator}</td>
@@ -629,18 +629,6 @@
                 });
             }
         </script>
-        <footer class="breadcrumb mb-4">
-            <div class="container-fluid px-4">
-                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                    <div class="text-center text-md-start">
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>

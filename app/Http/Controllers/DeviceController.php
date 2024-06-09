@@ -9,15 +9,21 @@ use Illuminate\Support\Facades\Log;
 class DeviceController extends Controller
 {
     // Index
-    public function index()
+    public function index(Request $request)
     {
-        return Device::all();
+        $device_name = $request->device_name;
+        $devices = Device::orderBy("id", "asc");
+        if($device_name){
+            $devices = $devices->where("device_name", $device_name);
+        }
+        $devices = $devices->get();
+        return response() -> json($devices);
+        // return Device::all();
     }
 
     // POST
     public function store(Request $request)
     {
-        $devices = Device::all();
 
         $request->validate([
             'device_name' => 'required|string|max:255',

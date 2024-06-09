@@ -56,7 +56,8 @@
         <div class="col-xl-3 col-md-6">
             <div class="card bg-primary text-white mb-4">
                 <div class="card-body text-black">
-                    <i class="fas fa-thermometer-half me-2"></i><b> Temperature Sensor</b></div>
+                    <i class="fas fa-thermometer-half me-2"></i><b> Temperature Sensor</b>
+                </div>
                 <div class="card-footer d-flex flex-column align-items-start">
                     <p id="current-temperature">Current: <span id="temperature-value">Loading...</span>°C</p>
                     <p id="min-temperature">Min: <span id="min-temperature-value">Loading...</span>°C</p>
@@ -69,7 +70,8 @@
         <div class="col-xl-3 col-md-6">
             <div class="card bg-warning text-white mb-4">
                 <div class="card-body text-black">
-                    <i class="fas fa-tint half me-2"></i><b> Humidity Sensor</b></div>
+                    <i class="fas fa-tint half me-2"></i><b> Humidity Sensor</b>
+                </div>
                 <div class="card-footer d-flex flex-column align-items-start">
                     <p id="current-humidity">Current: <span id="humidity-value">Loading...</span>%</p>
                     <p id="min-humidity">Min: <span id="min-humidity-value">Loading...</span>%</p>
@@ -82,7 +84,8 @@
         <div class="col-xl-3 col-md-6">
             <div class="card bg-success text-white mb-4">
                 <div class="card-body text-black">
-                    <i class="fas fa-seedling me-2"></i><b> Soil Moisture Sensor</b></div>
+                    <i class="fas fa-seedling me-2"></i><b> Soil Moisture Sensor</b>
+                </div>
                 <div class="card-footer d-flex flex-column align-items-start">
                     <p id="current-moisture">Current: <span id="moisture-value">Loading...</span>%</p>
                     <p id="min-moisture">Min: <span id="min-moisture-value">Loading...</span>%</p>
@@ -95,7 +98,8 @@
         <div class="col-xl-3 col-md-6">
             <div class="card bg-danger text-white mb-4">
                 <div class="card-body text-black">
-                    <i class="fas fa-sun me-2"></i><b> Intensity Sensor</b></div>
+                    <i class="fas fa-sun me-2"></i><b> Intensity Sensor</b>
+                </div>
                 <div class="card-footer d-flex flex-column align-items-start">
                     <p id="current-intensity">Current: <span id="intensity-value">Loading...</span>%</p>
                     <p id="min-intensity">Min: <span id="min-intensity-value">Loading...</span>%</p>
@@ -220,9 +224,15 @@
 
 @push('scripts')
     <script>
-        Highcharts.chart('temperature-sensor', {
+        // =================== temperature graphic ==================== //
+        let temperatureData = [];
+
+        const chart = new Highcharts.Chart('temperature-sensor', {
+            accessibility: {
+                enabled: true
+            },
             chart: {
-                type: 'spline'
+                type: 'areaspline'
             },
             title: {
                 text: 'Temperature'
@@ -238,7 +248,7 @@
             },
             yAxis: {
                 min: 0,
-                max: 70,
+                max: 100,
                 tickInterval: 10,
                 title: {
                     text: 'Temperature Value'
@@ -253,73 +263,137 @@
                 pointFormat: 'Time = {point.x}, Temperature Value = {point.y}'
             },
             plotOptions: {
-                spline: {
+                areaspline: {
                     marker: {
                         radius: 4,
                         lineColor: '#666666',
                         lineWidth: 1
+                    },
+                    lineWidth: 3,
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 1,
+                            x2: 0,
+                            y2: 0
+                        },
+                        stops: [
+                            [0, '#1E90FF'], // Blue
+                            [1, '#FF0000'] // Red
+                        ]
                     }
                 }
             },
             series: [{
-                data: [
-                    [0, 5.2],
-                    [5, 25.3],
-                    [10, 15.7],
-                    [15, 35.0],
-                    [20, 10.2],
-                    [25, 55.3],
-                    [30, 30.0],
-                    [35, 70.5],
-                    [40, 20.2],
-                    [45, 80.4],
-                    [50, 25.6],
-                    [55, 60.7],
-                    [60, 35.0],
-                    [65, 50.3],
-                    [70, 20.4],
-                    [75, 65.0],
-                    [80, 45.3],
-                    [85, 55.0],
-                    [90, 30.4],
-                    [95, 70.0],
-                    [100, 40.1]
-                ],
+                data: temperatureData,
+                name: 'Temperature Sensor',
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 1,
+                        x2: 0,
+                        y2: 0
+                    },
+                    stops: [
+                        [0, '#1E90FF'], // Blue
+                        [1, '#FF0000'] // Red
+                    ]
+                },
                 zones: [{
-                    value: 10,
+                    value: 50,
                     color: '#1E90FF' // Blue
                 }, {
-                    value: 20,
-                    color: '#32CD32' // Green
-                }, {
-                    value: 30,
-                    color: '#FFD700' // Gold
-                }, {
-                    value: 40,
-                    color: '#FF4500' // OrangeRed
-                }, {
                     color: '#FF0000' // Red
-                }],
-                pointStart: 1,
-                name: 'Temperature Sensor'
+                }]
             }]
         });
 
+        console.log("Starting fetch request...");
 
-        Highcharts.chart('humidity-sensor', {
+        fetch("{{ route('datas.index') }}?device_id=3")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetch successful");
+                console.log(data);
+                temperatureData = [];
+
+                data.forEach(function(item) {
+                    temperatureData.push([item.created_at, item.value]);
+                });
+
+                // Set initial data on chart
+                chart.series[0].setData(temperatureData);
+
+                // Start interval to fetch updated data
+                intervalTemperature();
+            })
+            .catch(error => {
+                console.log("Fetch error");
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+
+        function intervalTemperature() {
+            setInterval(function() {
+                updateTemperatureData();
+            }, 5000);
+        }
+
+        function updateTemperatureData() {
+            fetch("{{ route('datas.index') }}?device_id=3")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Update fetch successful");
+                    console.log(data);
+                    temperatureData = [];
+                    data.forEach(function(item) {
+                        temperatureData.push([item.created_at, item.value]);
+                    });
+                    // Update the chart with new data
+                    chart.series[0].setData(temperatureData);
+                })
+                .catch(error => {
+                    console.log("Update fetch error");
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+        // =================== END ==================== //
+
+        let humidityData = [];
+
+        const humidityChart = Highcharts.chart('humidity-sensor', {
             chart: {
-                type: 'spline'
+                type: 'areaspline'
             },
             title: {
-                text: 'Humidity - air'
+                text: 'Humidity - Air'
             },
             xAxis: {
-                tickInterval: 1,
+                type: 'datetime', // Adjusted for time-based data
+                tickInterval: 1000 * 60, // 1 minute interval
                 accessibility: {
-                    description: 'Humidity values from 0 to 100'
+                    description: 'Time-based humidity values'
                 },
                 title: {
                     text: 'Time'
+                },
+                dateTimeLabelFormats: {
+                    second: '%H:%M:%S',
+                    minute: '%H:%M',
+                    hour: '%H:%M',
+                    day: '%e. %b',
+                    week: '%e. %b',
+                    month: '%b \'%y',
+                    year: '%Y'
                 }
             },
             yAxis: {
@@ -330,82 +404,155 @@
                     text: 'Humidity Value'
                 },
                 labels: {
-                    format: '{value}°'
+                    format: '{value}%'
                 },
                 lineWidth: 1
             },
             tooltip: {
                 headerFormat: '<b>{series.name}</b><br />',
-                pointFormat: 'Time = {point.x}, Humidity Value = {point.y}'
+                pointFormat: 'Time = {point.x:%H:%M:%S}, Humidity Value = {point.y}'
             },
             plotOptions: {
-                spline: {
+                areaspline: {
                     marker: {
                         radius: 4,
                         lineColor: '#666666',
                         lineWidth: 1
+                    },
+                    lineWidth: 3,
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 1,
+                            x2: 0,
+                            y2: 0
+                        },
+                        stops: [
+                            [0, '#32CD32'], // Green
+                            [1, '#FFD700'] // Yellow
+                        ]
                     }
                 }
             },
             series: [{
-                data: [
-                    [0, 5.2],
-                    [5, 25.3],
-                    [10, 15.7],
-                    [15, 35.0],
-                    [20, 10.2],
-                    [25, 55.3],
-                    [30, 30.0],
-                    [35, 70.5],
-                    [40, 20.2],
-                    [45, 80.4],
-                    [50, 25.6],
-                    [55, 60.7],
-                    [60, 35.0],
-                    [65, 50.3],
-                    [70, 20.4],
-                    [75, 65.0],
-                    [80, 45.3],
-                    [85, 55.0],
-                    [90, 30.4],
-                    [95, 70.0],
-                    [100, 40.1]
-                ],
+                data: humidityData,
+                name: 'Humidity Sensor',
                 zones: [{
-                    value: 10,
-                    color: '#1E90FF' // Blue
-                }, {
-                    value: 20,
+                    value: 50,
                     color: '#32CD32' // Green
                 }, {
-                    value: 30,
-                    color: '#FFD700' // Gold
-                }, {
-                    value: 40,
-                    color: '#FF4500' // OrangeRed
-                }, {
-                    color: '#FF0000' // Red
+                    color: '#FFD700' // Yellow
                 }],
-                pointStart: 1,
-                name: 'Humidity Sensor'
+                color: '#32CD32', // Line color (start with green for initial values)
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 1,
+                        x2: 0,
+                        y2: 0
+                    },
+                    stops: [
+                        [0, '#32CD32'], // Green
+                        [1, '#FFD700'] // Yellow
+                    ]
+                }
             }]
         });
 
+        console.log("Starting fetch request...");
 
-        Highcharts.chart('moisture-sensor', {
+        fetch("{{ route('datas.index') }}?device_id=4")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetch successful");
+                console.log(data);
+                humidityData = [];
+
+                data.forEach(function(item) {
+                    // Parse the timestamp to a JS Date object
+                    humidityData.push([new Date(item.created_at).getTime(), item.value]);
+                });
+
+                // Set initial data on chart
+                humidityChart.series[0].setData(humidityData);
+
+                // Start interval to fetch updated data
+                intervalHumidity();
+            })
+            .catch(error => {
+                console.log("Fetch error");
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+
+        function intervalHumidity() {
+            setInterval(function() {
+                updateHumidityData();
+            }, 5000);
+        }
+
+        function updateHumidityData() {
+            fetch("{{ route('datas.index') }}?device_id=4")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Update fetch successful");
+                    console.log(data);
+
+                    // Append new data instead of replacing
+                    data.forEach(function(item) {
+                        const newPoint = [new Date(item.created_at).getTime(), item.value];
+                        const lastPoint = humidityChart.series[0].data[humidityChart.series[0].data.length - 1];
+
+                        // Ensure not to add duplicates
+                        if (newPoint[0] > lastPoint.x) {
+                            humidityChart.series[0].addPoint(newPoint, true, humidityChart.series[0].data
+                                .length >= 100); // Remove old points to avoid clutter
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.log("Update fetch error");
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+
+
+
+        let moistureData = [];
+
+        const moistureChart = Highcharts.chart('moisture-sensor', {
             chart: {
-                type: 'spline'
+                type: 'areaspline'
             },
             title: {
                 text: 'Soil Moisture'
             },
             xAxis: {
-                tickInterval: 1,
+                type: 'datetime', // Adjusted for time-based data
+                tickInterval: 1000 * 60, // 1 minute interval
                 accessibility: {
-                    description: 'Moisture values from 0 to 100'
+                    description: 'Time-based moisture values'
                 },
                 title: {
                     text: 'Time'
+                },
+                dateTimeLabelFormats: {
+                    second: '%H:%M:%S',
+                    minute: '%H:%M',
+                    hour: '%H:%M',
+                    day: '%e. %b',
+                    week: '%e. %b',
+                    month: '%b \'%y',
+                    year: '%Y'
                 }
             },
             yAxis: {
@@ -422,76 +569,149 @@
             },
             tooltip: {
                 headerFormat: '<b>{series.name}</b><br />',
-                pointFormat: 'Time = {point.x}, Moisture Value = {point.y}'
+                pointFormat: 'Time = {point.x:%H:%M:%S}, Moisture Value = {point.y}'
             },
             plotOptions: {
-                spline: {
+                areaspline: {
                     marker: {
                         radius: 4,
                         lineColor: '#666666',
                         lineWidth: 1
+                    },
+                    lineWidth: 3,
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 1,
+                            x2: 0,
+                            y2: 0
+                        },
+                        stops: [
+                            [0, '#32CD32'], // Green
+                            [1, '#1E90FF'] // Blue
+                        ]
                     }
                 }
             },
             series: [{
-                data: [
-                    [0, 5.2],
-                    [5, 25.3],
-                    [10, 15.7],
-                    [15, 35.0],
-                    [20, 10.2],
-                    [25, 55.3],
-                    [30, 30.0],
-                    [35, 70.5],
-                    [40, 20.2],
-                    [45, 80.4],
-                    [50, 25.6],
-                    [55, 60.7],
-                    [60, 35.0],
-                    [65, 50.3],
-                    [70, 20.4],
-                    [75, 65.0],
-                    [80, 45.3],
-                    [85, 55.0],
-                    [90, 30.4],
-                    [95, 70.0],
-                    [100, 40.1]
-                ],
+                data: moistureData,
                 zones: [{
-                    value: 10,
-                    color: '#1E90FF' // Blue
-                }, {
-                    value: 20,
+                    value: 50,
                     color: '#32CD32' // Green
                 }, {
-                    value: 30,
-                    color: '#FFD700' // Gold
-                }, {
-                    value: 40,
-                    color: '#FF4500' // OrangeRed
-                }, {
-                    color: '#FF0000' // Red
+                    color: '#1E90FF' // Blue
                 }],
-                pointStart: 1,
-                name: 'Soil Moisture Sensor'
+                name: 'Soil Moisture Sensor',
+                color: '#32CD32', // Line color (start with green for initial values)
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 1,
+                        x2: 0,
+                        y2: 0
+                    },
+                    stops: [
+                        [0, '#32CD32'], // Green
+                        [1, '#1E90FF'] // Blue
+                    ]
+                }
             }]
         });
 
+        console.log("Starting fetch request...");
 
-        Highcharts.chart('intensity-sensor', {
+        fetch("{{ route('datas.index') }}?device_id=5")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetch successful");
+                console.log(data);
+                moistureData = [];
+
+                data.forEach(function(item) {
+                    // Parse the timestamp to a JS Date object
+                    moistureData.push([new Date(item.created_at).getTime(), item.value]);
+                });
+
+                // Set initial data on chart
+                moistureChart.series[0].setData(moistureData);
+
+                // Start interval to fetch updated data
+                intervalMoisture();
+            })
+            .catch(error => {
+                console.log("Fetch error");
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+
+        function intervalMoisture() {
+            setInterval(function() {
+                updateMoistureData();
+            }, 5000);
+        }
+
+        function updateMoistureData() {
+            fetch("{{ route('datas.index') }}?device_id=5")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Update fetch successful");
+                    console.log(data);
+
+                    // Append new data instead of replacing
+                    data.forEach(function(item) {
+                        const newPoint = [new Date(item.created_at).getTime(), item.value];
+                        const lastPoint = moistureChart.series[0].data[moistureChart.series[0].data.length - 1];
+
+                        // Ensure not to add duplicates
+                        if (newPoint[0] > lastPoint.x) {
+                            moistureChart.series[0].addPoint(newPoint, true, moistureChart.series[0].data
+                                .length >= 100); // Remove old points to avoid clutter
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.log("Update fetch error");
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+
+
+
+        let intensityData = [];
+
+        const intensityChart = Highcharts.chart('intensity-sensor', {
             chart: {
-                type: 'spline'
+                type: 'areaspline'
             },
             title: {
                 text: 'Intensity Moisture'
             },
             xAxis: {
-                tickInterval: 1,
+                type: 'datetime', // Adjusted for time-based data
+                tickInterval: 1000 * 60, // 1 minute interval
                 accessibility: {
-                    description: 'Intensity values from 0 to 100'
+                    description: 'Time-based intensity values'
                 },
                 title: {
                     text: 'Time'
+                },
+                dateTimeLabelFormats: {
+                    second: '%H:%M:%S',
+                    minute: '%H:%M',
+                    hour: '%H:%M',
+                    day: '%e. %b',
+                    week: '%e. %b',
+                    month: '%b \'%y',
+                    year: '%Y'
                 }
             },
             yAxis: {
@@ -508,59 +728,120 @@
             },
             tooltip: {
                 headerFormat: '<b>{series.name}</b><br />',
-                pointFormat: 'Time = {point.x}, Intensity Value = {point.y}'
+                pointFormat: 'Time = {point.x:%H:%M:%S}, Intensity Value = {point.y}'
             },
             plotOptions: {
-                spline: {
+                areaspline: {
                     marker: {
                         radius: 4,
                         lineColor: '#666666',
                         lineWidth: 1
+                    },
+                    lineWidth: 3,
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 1,
+                            x2: 0,
+                            y2: 0
+                        },
+                        stops: [
+                            [0, '#FFD700'], // Gold (Yellow)
+                            [1, '#FF4500'] // OrangeRed (Orange)
+                        ]
                     }
                 }
             },
             series: [{
-                data: [
-                    [0, 5.2],
-                    [5, 25.3],
-                    [10, 15.7],
-                    [15, 35.0],
-                    [20, 10.2],
-                    [25, 55.3],
-                    [30, 30.0],
-                    [35, 70.5],
-                    [40, 20.2],
-                    [45, 80.4],
-                    [50, 25.6],
-                    [55, 60.7],
-                    [60, 35.0],
-                    [65, 50.3],
-                    [70, 20.4],
-                    [75, 65.0],
-                    [80, 45.3],
-                    [85, 55.0],
-                    [90, 30.4],
-                    [95, 70.0],
-                    [100, 40.1]
-                ],
+                data: intensityData,
                 zones: [{
-                    value: 10,
-                    color: '#1E90FF' // Blue
+                    value: 50,
+                    color: '#FFD700' // Gold (Yellow)
                 }, {
-                    value: 20,
-                    color: '#32CD32' // Green
-                }, {
-                    value: 30,
-                    color: '#FFD700' // Gold
-                }, {
-                    value: 40,
-                    color: '#FF4500' // OrangeRed
-                }, {
-                    color: '#FF0000' // Red
+                    color: '#FF4500' // OrangeRed (Orange)
                 }],
-                pointStart: 1,
-                name: 'Intensity Sensor'
+                name: 'Intensity Sensor',
+                color: '#FFD700', // Line color (start with gold for initial values)
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 1,
+                        x2: 0,
+                        y2: 0
+                    },
+                    stops: [
+                        [0, '#FFD700'], // Gold (Yellow)
+                        [1, '#FF4500'] // OrangeRed (Orange)
+                    ]
+                }
             }]
         });
+
+        console.log("Starting fetch request...");
+
+        fetch("{{ route('datas.index') }}?device_id=6")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetch successful");
+                console.log(data);
+                intensityData = [];
+
+                data.forEach(function(item) {
+                    // Parse the timestamp to a JS Date object
+                    intensityData.push([new Date(item.created_at).getTime(), item.value]);
+                });
+
+                // Set initial data on chart
+                intensityChart.series[0].setData(intensityData);
+
+                // Start interval to fetch updated data
+                intervalIntensity();
+            })
+            .catch(error => {
+                console.log("Fetch error");
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+
+        function intervalIntensity() {
+            setInterval(function() {
+                updateIntensityData();
+            }, 5000);
+        }
+
+        function updateIntensityData() {
+            fetch("{{ route('datas.index') }}?device_id=6")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Update fetch successful");
+                    console.log(data);
+
+                    // Append new data instead of replacing
+                    data.forEach(function(item) {
+                        const newPoint = [new Date(item.created_at).getTime(), item.value];
+                        const lastPoint = intensityChart.series[0].data[intensityChart.series[0].data.length -
+                            1];
+
+                        // Ensure not to add duplicates
+                        if (newPoint[0] > lastPoint.x) {
+                            intensityChart.series[0].addPoint(newPoint, true, intensityChart.series[0].data
+                                .length >= 100); // Remove old points to avoid clutter
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.log("Update fetch error");
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
     </script>
 @endpush

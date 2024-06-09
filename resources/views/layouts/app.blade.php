@@ -50,10 +50,6 @@
                             </nav>
                         </div>
                         <div class="sb-sidenav-menu-heading">Data</div>
-                        <a class="nav-link" href="">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Charts
-                        </a>
 
                         <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTables"
                             aria-expanded="false" aria-controls="collapseLayouts">
@@ -84,10 +80,10 @@
                 </div>
             </main>
             @unless (Request::is('devices') || Request::is('datas') || Request::is('rules'))
-                <footer class="py-4 bg-light mt-auto">
+                <footer class="py-4 bg-dark mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex flex-column flex-md-row align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div class="text-muted"><b>Copyright &copy; Agung Nugroho 2024</b></div>
                             <div class="text-center text-md-start">
                                 <a href="#">Privacy Policy</a>
                                 &middot;
@@ -108,6 +104,8 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"crossorigin="anonymous"></script>
     <script src="/assets/js/datatables-simple-demo.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 
     @stack('scripts')
 </body>
