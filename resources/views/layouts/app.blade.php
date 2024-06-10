@@ -43,10 +43,10 @@
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
                             data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="layout-static.html">Temperature Sensor</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Humidity Sensor</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Soil Moisture Sensor</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Intensity Sensor</a>
+                                <a class="nav-link" href="{{ url('/temperature') }}">Temperature Sensor</a>
+                                <a class="nav-link" href="{{ url('/humidity') }}">Humidity Sensor</a>
+                                <a class="nav-link" href="{{ url('/moisture') }}">Soil Moisture Sensor</a>
+                                <a class="nav-link" href="{{ url('/intensity') }}">Intensity Sensor</a>
                             </nav>
                         </div>
                         <div class="sb-sidenav-menu-heading">Data</div>

@@ -10,22 +10,31 @@ use Illuminate\Support\Facades\Log;
 class DataController extends Controller
 {
 
-    // public function __construct()
-    // {
-    //     // Subscribe to the MQTT topic when the controller is instantiated
-    //     $this->subscribeToMqtt();
-    // }
+    public function getDataByDeviceId($device_id)
+    {
+        $data = Data::where('device_id', $device_id)->latest()->first(); // Ambil data terbaru berdasarkan device_id
+        if ($data) {
+            return response()->json($data);
+        } else {
+            return response()->json(["message" => "Data not found."], 404);
+        }
+    }
 
     // INDEX
     public function index(Request $request)
     {
         $device_id = $request->device_id;
-        $data = Data::orderBy("id", "asc");
-        if($device_id){
-            $data = $data->where("device_id", $device_id);
+        $dataQuery = Data::orderBy("created_at", "desc"); // Urutkan data berdasarkan created_at secara descending
+
+        // Filter berdasarkan device_id jika diberikan
+        if ($device_id) {
+            $dataQuery = $dataQuery->where("device_id", $device_id);
         }
-        $datas = $data->get();
-        return response() -> json($datas);
+
+        // Ambil 10 data terbaru
+        $datas = $dataQuery->take(10)->get();
+
+        return response()->json($datas);
         // return Data::all();
     }
 

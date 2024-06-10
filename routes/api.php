@@ -23,6 +23,9 @@ Route::post('/data', [DataController::class, 'store']);
 Route::get('/data/{id}', [DataController::class, 'show']);
 Route::put('/data/{id}', [DataController::class, 'update']);
 Route::delete('/data/{id}', [DataController::class, 'destroy']);
+// routes/api.php
+Route::get('/data/device/{device_id}', [DataController::class, 'getDataByDeviceId']);
+
 
 // Rule API
 Route::get('/rule', [RuleController::class, 'index']);

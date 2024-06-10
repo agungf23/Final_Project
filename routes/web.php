@@ -25,6 +25,20 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/temperature', function () {
+    return view('temperature');
+})->middleware(['auth', 'verified'])->name('temperature');
+
+Route::get('/humidity', function () {
+    return view('humidity');
+})->middleware(['auth', 'verified'])->name('humidity');
+Route::get('/moisture', function () {
+    return view('moisture');
+})->middleware(['auth', 'verified'])->name('moisture');
+Route::get('/intensity', function () {
+    return view('intensity');
+})->middleware(['auth', 'verified'])->name('intensity');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -44,6 +58,7 @@ Route::get('/datas', function () {
     return view('datas');
 });
 Route::resource('api/datas', DataController::class)->except(['create', 'edit']);
+
 
 // Data
 Route::get('/rules', function () {

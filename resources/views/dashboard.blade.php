@@ -58,39 +58,44 @@
                 <div class="card-body text-black">
                     <i class="fas fa-thermometer-half me-2"></i><b> Temperature Sensor</b>
                 </div>
-                <div class="card-footer d-flex flex-column align-items-start">
-                    <p id="current-temperature">Current: <span id="temperature-value">Loading...</span>°C</p>
-                    <p id="min-temperature">Min: <span id="min-temperature-value">Loading...</span>°C</p>
-                    <p id="max-temperature">Max: <span id="max-temperature-value">Loading...</span>°C</p>
-                    <p id="max-temperature">Time: <span id="time-value">Loading...</span></p>
+                <div class="card-footer text-black d-flex flex-column align-items-start">
+                    <p>Device ID: <span id="temperature-device-id-value">Loading...</span></p>
+                    <p>Current: <span id="temperature-value">Loading...</span>°C</p>
+                    <p>Min: <span id="temperature-min-value">Loading...</span>°C</p>
+                    <p>Max: <span id="temperature-max-value">Loading...</span>°C</p>
+                    <p>Time: <span id="temperature-time-value">Loading...</span></p>
                 </div>
             </div>
         </div>
+
 
         <div class="col-xl-3 col-md-6">
             <div class="card bg-warning text-white mb-4">
                 <div class="card-body text-black">
                     <i class="fas fa-tint half me-2"></i><b> Humidity Sensor</b>
                 </div>
-                <div class="card-footer d-flex flex-column align-items-start">
-                    <p id="current-humidity">Current: <span id="humidity-value">Loading...</span>%</p>
-                    <p id="min-humidity">Min: <span id="min-humidity-value">Loading...</span>%</p>
-                    <p id="max-humidity">Max: <span id="max-humidity-value">Loading...</span>%</p>
-                    <p id="humidity-time">Time: <span id="humidity-time-value">Loading...</span></p>
+                <div class="card-footer text-black d-flex flex-column align-items-start">
+                    <p>Device ID: <span id="humidity-device-id-value">Loading...</span></p>
+                    <p>Current: <span id="humidity-value">Loading...</span>°C</p>
+                    <p>Min: <span id="humidity-min-value">Loading...</span>°C</p>
+                    <p>Max: <span id="humidity-max-value">Loading...</span>°C</p>
+                    <p>Time: <span id="humidity-time-value">Loading...</span></p>
                 </div>
             </div>
         </div>
 
+
         <div class="col-xl-3 col-md-6">
             <div class="card bg-success text-white mb-4">
                 <div class="card-body text-black">
-                    <i class="fas fa-seedling me-2"></i><b> Soil Moisture Sensor</b>
+                    <i class="fas fa-thermometer-half me-2"></i><b>Soil Moisture Sensor</b>
                 </div>
-                <div class="card-footer d-flex flex-column align-items-start">
-                    <p id="current-moisture">Current: <span id="moisture-value">Loading...</span>%</p>
-                    <p id="min-moisture">Min: <span id="min-moisture-value">Loading...</span>%</p>
-                    <p id="max-moisture">Max: <span id="max-moisture-value">Loading...</span>%</p>
-                    <p id="moisture-time">Time: <span id="moisture-time-value">Loading...</span></p>
+                <div class="card-footer text-black d-flex flex-column align-items-start">
+                    <p>Device ID: <span id="moisture-device-id-value">Loading...</span></p>
+                    <p>Current: <span id="moisture-value">Loading...</span>%</p>
+                    <p>Min: <span id="min-moisture-value">Loading...</span>%</p>
+                    <p>Max: <span id="max-moisture-value">Loading...</span>%</p>
+                    <p>Time: <span id="moisture-time-value">Loading...</span></p>
                 </div>
             </div>
         </div>
@@ -98,13 +103,14 @@
         <div class="col-xl-3 col-md-6">
             <div class="card bg-danger text-white mb-4">
                 <div class="card-body text-black">
-                    <i class="fas fa-sun me-2"></i><b> Intensity Sensor</b>
+                    <i class="fas fa-thermometer-half me-2"></i><b>Intensity Sensor</b>
                 </div>
-                <div class="card-footer d-flex flex-column align-items-start">
-                    <p id="current-intensity">Current: <span id="intensity-value">Loading...</span>%</p>
-                    <p id="min-intensity">Min: <span id="min-intensity-value">Loading...</span>%</p>
-                    <p id="max-intensity">Max: <span id="max-intensity-value">Loading...</span>%</p>
-                    <p id="intensity-time">Time: <span id="intensity-time-value">Loading...</span></p>
+                <div class="card-footer text-black d-flex flex-column align-items-start">
+                    <p>Device ID: <span id="intensity-device-id-value">Loading...</span></p>
+                    <p>Current: <span id="intensity-value">Loading...</span>%</p>
+                    <p>Min: <span id="min-intensity-value">Loading...</span>%</p>
+                    <p>Max: <span id="max-intensity-value">Loading...</span>%</p>
+                    <p>Time: <span id="intensity-time-value">Loading...</span></p>
                 </div>
             </div>
         </div>
@@ -151,6 +157,82 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deviceIds = {
+                temperature: 3,
+                humidity: 4,
+                moisture: 5,
+                intensity: 6
+            };
+
+            const elements = {
+                temperature: {
+                    deviceId: 'temperature-device-id-value',
+                    value: 'temperature-value',
+                    minValue: 'temperature-min-value',
+                    maxValue: 'temperature-max-value',
+                    time: 'temperature-time-value'
+                },
+                humidity: {
+                    deviceId: 'humidity-device-id-value',
+                    value: 'humidity-value',
+                    minValue: 'humidity-min-value',
+                    maxValue: 'humidity-max-value',
+                    time: 'humidity-time-value'
+                },
+                moisture: {
+                    deviceId: 'moisture-device-id-value',
+                    value: 'moisture-value',
+                    minValue: 'moisture-min-value',
+                    maxValue: 'moisture-max-value',
+                    time: 'moisture-time-value'
+                },
+                intensity: {
+                    deviceId: 'intensity-device-id-value',
+                    value: 'intensity-value',
+                    minValue: 'intensity-min-value',
+                    maxValue: 'intensity-max-value',
+                    time: 'intensity-time-value'
+                }
+            };
+
+            function fetchData(sensorType) {
+                const deviceId = deviceIds[sensorType];
+                const endpoint = `/api/data/device/${deviceId}`;
+
+                fetch(endpoint)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.message) {
+                            throw new Error(data.message);
+                        }
+                        document.getElementById(elements[sensorType].deviceId).textContent = data.device_id;
+                        document.getElementById(elements[sensorType].value).textContent = data.value;
+                        document.getElementById(elements[sensorType].minValue).textContent = data.min_value;
+                        document.getElementById(elements[sensorType].maxValue).textContent = data.max_value;
+                        document.getElementById(elements[sensorType].time).textContent = new Date(data
+                            .created_at).toLocaleString();
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching data for ${sensorType}:`, error);
+                        document.getElementById(elements[sensorType].deviceId).textContent = 'Error';
+                        document.getElementById(elements[sensorType].value).textContent = 'Error';
+                        document.getElementById(elements[sensorType].minValue).textContent = 'Error';
+                        document.getElementById(elements[sensorType].maxValue).textContent = 'Error';
+                        document.getElementById(elements[sensorType].time).textContent = 'Error';
+                    });
+            }
+
+            ['temperature', 'humidity', 'moisture', 'intensity'].forEach(fetchData);
+        });
+    </script>
 
     <style>
         .card {
@@ -224,9 +306,7 @@
 
 @push('scripts')
     <script>
-        // =================== temperature graphic ==================== //
         let temperatureData = [];
-
         const chart = new Highcharts.Chart('temperature-sensor', {
             accessibility: {
                 enabled: true
@@ -307,9 +387,7 @@
                 }]
             }]
         });
-
         console.log("Starting fetch request...");
-
         fetch("{{ route('datas.index') }}?device_id=3")
             .then(response => {
                 if (!response.ok) {
@@ -340,7 +418,7 @@
         function intervalTemperature() {
             setInterval(function() {
                 updateTemperatureData();
-            }, 5000);
+            }, 2000);
         }
 
         function updateTemperatureData() {
@@ -366,10 +444,8 @@
                     console.error('There has been a problem with your fetch operation:', error);
                 });
         }
-        // =================== END ==================== //
 
         let humidityData = [];
-
         const humidityChart = Highcharts.chart('humidity-sensor', {
             chart: {
                 type: 'areaspline'
@@ -378,22 +454,12 @@
                 text: 'Humidity - Air'
             },
             xAxis: {
-                type: 'datetime', // Adjusted for time-based data
-                tickInterval: 1000 * 60, // 1 minute interval
+                tickInterval: 1,
                 accessibility: {
-                    description: 'Time-based humidity values'
+                    description: 'Humidity values from 0 to 100'
                 },
                 title: {
                     text: 'Time'
-                },
-                dateTimeLabelFormats: {
-                    second: '%H:%M:%S',
-                    minute: '%H:%M',
-                    hour: '%H:%M',
-                    day: '%e. %b',
-                    week: '%e. %b',
-                    month: '%b \'%y',
-                    year: '%Y'
                 }
             },
             yAxis: {
@@ -410,7 +476,7 @@
             },
             tooltip: {
                 headerFormat: '<b>{series.name}</b><br />',
-                pointFormat: 'Time = {point.x:%H:%M:%S}, Humidity Value = {point.y}'
+                pointFormat: 'Time = {point.x}, Humidity Value = {point.y}'
             },
             plotOptions: {
                 areaspline: {
@@ -458,9 +524,7 @@
                 }
             }]
         });
-
         console.log("Starting fetch request...");
-
         fetch("{{ route('datas.index') }}?device_id=4")
             .then(response => {
                 if (!response.ok) {
@@ -475,7 +539,7 @@
 
                 data.forEach(function(item) {
                     // Parse the timestamp to a JS Date object
-                    humidityData.push([new Date(item.created_at).getTime(), item.value]);
+                    humidityData.push([item.created_at, item.value]);
                 });
 
                 // Set initial data on chart
@@ -492,7 +556,7 @@
         function intervalHumidity() {
             setInterval(function() {
                 updateHumidityData();
-            }, 5000);
+            }, 2000);
         }
 
         function updateHumidityData() {
@@ -509,15 +573,10 @@
 
                     // Append new data instead of replacing
                     data.forEach(function(item) {
-                        const newPoint = [new Date(item.created_at).getTime(), item.value];
-                        const lastPoint = humidityChart.series[0].data[humidityChart.series[0].data.length - 1];
-
-                        // Ensure not to add duplicates
-                        if (newPoint[0] > lastPoint.x) {
-                            humidityChart.series[0].addPoint(newPoint, true, humidityChart.series[0].data
-                                .length >= 100); // Remove old points to avoid clutter
-                        }
+                        humidityData.push([item.created_at, item.value]);
                     });
+                    // Update the chart with new data
+                    chart.series[0].setData(humidityData);
                 })
                 .catch(error => {
                     console.log("Update fetch error");
@@ -526,9 +585,7 @@
         }
 
 
-
         let moistureData = [];
-
         const moistureChart = Highcharts.chart('moisture-sensor', {
             chart: {
                 type: 'areaspline'
@@ -537,22 +594,12 @@
                 text: 'Soil Moisture'
             },
             xAxis: {
-                type: 'datetime', // Adjusted for time-based data
-                tickInterval: 1000 * 60, // 1 minute interval
+                tickInterval: 1,
                 accessibility: {
-                    description: 'Time-based moisture values'
+                    description: 'Moisture values from 0 to 100'
                 },
                 title: {
                     text: 'Time'
-                },
-                dateTimeLabelFormats: {
-                    second: '%H:%M:%S',
-                    minute: '%H:%M',
-                    hour: '%H:%M',
-                    day: '%e. %b',
-                    week: '%e. %b',
-                    month: '%b \'%y',
-                    year: '%Y'
                 }
             },
             yAxis: {
@@ -569,7 +616,7 @@
             },
             tooltip: {
                 headerFormat: '<b>{series.name}</b><br />',
-                pointFormat: 'Time = {point.x:%H:%M:%S}, Moisture Value = {point.y}'
+                pointFormat: 'Time = {point.x}, Moisture Value = {point.y}'
             },
             plotOptions: {
                 areaspline: {
@@ -633,8 +680,7 @@
                 moistureData = [];
 
                 data.forEach(function(item) {
-                    // Parse the timestamp to a JS Date object
-                    moistureData.push([new Date(item.created_at).getTime(), item.value]);
+                    moistureData.push([item.created_at, item.value]);
                 });
 
                 // Set initial data on chart
@@ -651,7 +697,7 @@
         function intervalMoisture() {
             setInterval(function() {
                 updateMoistureData();
-            }, 5000);
+            }, 2000);
         }
 
         function updateMoistureData() {
@@ -666,18 +712,12 @@
                     console.log("Update fetch successful");
                     console.log(data);
 
-                    // Append new data instead of replacing
                     data.forEach(function(item) {
-                        const newPoint = [new Date(item.created_at).getTime(), item.value];
-                        const lastPoint = moistureChart.series[0].data[moistureChart.series[0].data.length - 1];
-
-                        // Ensure not to add duplicates
-                        if (newPoint[0] > lastPoint.x) {
-                            moistureChart.series[0].addPoint(newPoint, true, moistureChart.series[0].data
-                                .length >= 100); // Remove old points to avoid clutter
-                        }
-                    });
-                })
+                            moistureData.push([item.created_at, item.value]);
+                        });
+                        // Update the chart with new data
+                        chart.series[0].setData(moistureData);
+                    })
                 .catch(error => {
                     console.log("Update fetch error");
                     console.error('There has been a problem with your fetch operation:', error);
@@ -687,7 +727,6 @@
 
 
         let intensityData = [];
-
         const intensityChart = Highcharts.chart('intensity-sensor', {
             chart: {
                 type: 'areaspline'
@@ -696,23 +735,13 @@
                 text: 'Intensity Moisture'
             },
             xAxis: {
-                type: 'datetime', // Adjusted for time-based data
-                tickInterval: 1000 * 60, // 1 minute interval
-                accessibility: {
-                    description: 'Time-based intensity values'
-                },
-                title: {
-                    text: 'Time'
-                },
-                dateTimeLabelFormats: {
-                    second: '%H:%M:%S',
-                    minute: '%H:%M',
-                    hour: '%H:%M',
-                    day: '%e. %b',
-                    week: '%e. %b',
-                    month: '%b \'%y',
-                    year: '%Y'
-                }
+                tickInterval: 1,
+                    accessibility: {
+                        description: 'Intensity values from 0 to 100'
+                    },
+                    title: {
+                        text: 'Time'
+                    }
             },
             yAxis: {
                 min: 0,
@@ -728,7 +757,7 @@
             },
             tooltip: {
                 headerFormat: '<b>{series.name}</b><br />',
-                pointFormat: 'Time = {point.x:%H:%M:%S}, Intensity Value = {point.y}'
+                pointFormat: 'Time = {point.x}, Intensity Value = {point.y}'
             },
             plotOptions: {
                 areaspline: {
@@ -793,7 +822,7 @@
 
                 data.forEach(function(item) {
                     // Parse the timestamp to a JS Date object
-                    intensityData.push([new Date(item.created_at).getTime(), item.value]);
+                    intensityData.push([item.created_at, item.value]);
                 });
 
                 // Set initial data on chart
@@ -827,17 +856,11 @@
 
                     // Append new data instead of replacing
                     data.forEach(function(item) {
-                        const newPoint = [new Date(item.created_at).getTime(), item.value];
-                        const lastPoint = intensityChart.series[0].data[intensityChart.series[0].data.length -
-                            1];
-
-                        // Ensure not to add duplicates
-                        if (newPoint[0] > lastPoint.x) {
-                            intensityChart.series[0].addPoint(newPoint, true, intensityChart.series[0].data
-                                .length >= 100); // Remove old points to avoid clutter
-                        }
-                    });
-                })
+                        intensityData.push([item.created_at, item.value]);
+                        });
+                        // Update the chart with new data
+                        chart.series[0].setData(intensityData);
+                    })
                 .catch(error => {
                     console.log("Update fetch error");
                     console.error('There has been a problem with your fetch operation:', error);
