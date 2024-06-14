@@ -93,8 +93,8 @@
                 <div class="card-footer text-black d-flex flex-column align-items-start">
                     <p>Device ID: <span id="moisture-device-id-value">Loading...</span></p>
                     <p>Current: <span id="moisture-value">Loading...</span>%</p>
-                    <p>Min: <span id="min-moisture-value">Loading...</span>%</p>
-                    <p>Max: <span id="max-moisture-value">Loading...</span>%</p>
+                    <p>Min: <span id="moisture-min-value">Loading...</span>%</p>
+                    <p>Max: <span id="moisture-max-value">Loading...</span>%</p>
                     <p>Time: <span id="moisture-time-value">Loading...</span></p>
                 </div>
             </div>
@@ -108,8 +108,8 @@
                 <div class="card-footer text-black d-flex flex-column align-items-start">
                     <p>Device ID: <span id="intensity-device-id-value">Loading...</span></p>
                     <p>Current: <span id="intensity-value">Loading...</span>%</p>
-                    <p>Min: <span id="min-intensity-value">Loading...</span>%</p>
-                    <p>Max: <span id="max-intensity-value">Loading...</span>%</p>
+                    <p>Min: <span id="intensity-min-value">Loading...</span>%</p>
+                    <p>Max: <span id="intensity-max-value">Loading...</span>%</p>
                     <p>Time: <span id="intensity-time-value">Loading...</span></p>
                 </div>
             </div>
@@ -307,7 +307,7 @@
 @push('scripts')
     <script>
         let temperatureData = [];
-        const chart = new Highcharts.Chart('temperature-sensor', {
+        const temperatureChart = Highcharts.chart('temperature-sensor', {
             accessibility: {
                 enabled: true
             },
@@ -405,7 +405,7 @@
                 });
 
                 // Set initial data on chart
-                chart.series[0].setData(temperatureData);
+                temperatureChart.series[0].setData(temperatureData);
 
                 // Start interval to fetch updated data
                 intervalTemperature();
@@ -437,7 +437,7 @@
                         temperatureData.push([item.created_at, item.value]);
                     });
                     // Update the chart with new data
-                    chart.series[0].setData(temperatureData);
+                    temperatureChart.series[0].setData(temperatureData);
                 })
                 .catch(error => {
                     console.log("Update fetch error");
@@ -576,7 +576,7 @@
                         humidityData.push([item.created_at, item.value]);
                     });
                     // Update the chart with new data
-                    chart.series[0].setData(humidityData);
+                    humidityChart.series[0].setData(humidityData);
                 })
                 .catch(error => {
                     console.log("Update fetch error");
@@ -716,7 +716,7 @@
                             moistureData.push([item.created_at, item.value]);
                         });
                         // Update the chart with new data
-                        chart.series[0].setData(moistureData);
+                        moistureChart.series[0].setData(moistureChart);
                     })
                 .catch(error => {
                     console.log("Update fetch error");
@@ -859,7 +859,7 @@
                         intensityData.push([item.created_at, item.value]);
                         });
                         // Update the chart with new data
-                        chart.series[0].setData(intensityData);
+                        intensityChart.series[0].setData(intensityData);
                     })
                 .catch(error => {
                     console.log("Update fetch error");

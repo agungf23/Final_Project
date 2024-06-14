@@ -160,7 +160,6 @@
         <script>
             // =================== temperature graphic ==================== //
             let temperatureData = [];
-
             const chart = new Highcharts.Chart('temperature-sensor', {
                 accessibility: {
                     enabled: true
@@ -271,7 +270,7 @@
             function intervalTemperature() {
                 setInterval(function() {
                     updateTemperatureData();
-                }, 5000);
+                }, 2000);
             }
 
             function updateTemperatureData() {

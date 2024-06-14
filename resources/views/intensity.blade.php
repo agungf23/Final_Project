@@ -187,22 +187,12 @@
                     text: 'Intensity Moisture'
                 },
                 xAxis: {
-                    type: 'datetime', // Adjusted for time-based data
-                    tickInterval: 1000 * 60, // 1 minute interval
+                    tickInterval: 1,
                     accessibility: {
-                        description: 'Time-based intensity values'
+                        description: 'Intensity values from 0 to 100'
                     },
                     title: {
                         text: 'Time'
-                    },
-                    dateTimeLabelFormats: {
-                        second: '%H:%M:%S',
-                        minute: '%H:%M',
-                        hour: '%H:%M',
-                        day: '%e. %b',
-                        week: '%e. %b',
-                        month: '%b \'%y',
-                        year: '%Y'
                     }
                 },
                 yAxis: {
@@ -219,7 +209,7 @@
                 },
                 tooltip: {
                     headerFormat: '<b>{series.name}</b><br />',
-                    pointFormat: 'Time = {point.x:%H:%M:%S}, Intensity Value = {point.y}'
+                    pointFormat: 'Time = {point.x}, Intensity Value = {point.y}'
                 },
                 plotOptions: {
                     areaspline: {
@@ -284,7 +274,7 @@
 
                     data.forEach(function(item) {
                         // Parse the timestamp to a JS Date object
-                        intensityData.push([new Date(item.created_at).getTime(), item.value]);
+                        intensityData.push([item.created_at, item.value]);
                     });
 
                     // Set initial data on chart
@@ -301,7 +291,7 @@
             function intervalIntensity() {
                 setInterval(function() {
                     updateIntensityData();
-                }, 5000);
+                }, 2000);
             }
 
             function updateIntensityData() {
@@ -318,16 +308,10 @@
 
                         // Append new data instead of replacing
                         data.forEach(function(item) {
-                            const newPoint = [new Date(item.created_at).getTime(), item.value];
-                            const lastPoint = intensityChart.series[0].data[intensityChart.series[0].data.length -
-                                1];
-
-                            // Ensure not to add duplicates
-                            if (newPoint[0] > lastPoint.x) {
-                                intensityChart.series[0].addPoint(newPoint, true, intensityChart.series[0].data
-                                    .length >= 100); // Remove old points to avoid clutter
-                            }
+                            intensityData.push([item.created_at, item.value]);
                         });
+                        // Update the chart with new data
+                        chart.series[0].setData(intensityData);
                     })
                     .catch(error => {
                         console.log("Update fetch error");
